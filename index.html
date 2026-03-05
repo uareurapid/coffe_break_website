@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Coffee Break App — Drink Smarter. Sleep Better.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #160c07;
+      --bg2:       #1f1108;
+      --surface:   #2b1f18;
+      --surface2:  #3a2a20;
+      --accent:    #d9a176;
+      --accent2:   #e8ba8e;
+      --text:      #f7ede2;
+      --muted:     #c2b1a5;
+      --faint:     #6c5d52;
+      --green:     #57a373;
+      --red:       #e07070;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      background: rgba(22,12,7,0.7);
+      border-bottom: 1px solid rgba(217,161,118,0.08);
+      transition: background 0.3s;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .btn-nav {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-nav:hover { background: var(--accent2); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 120px 48px 80px;
+    }
+
+    /* Radial glow */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217,161,118,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(217,161,118,0.1);
+      border: 1px solid rgba(217,161,118,0.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(48px, 6vw, 78px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 440px;
+      margin-bottom: 44px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: var(--bg);
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(217,161,118,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--accent2);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(217,161,118,0.35);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--muted);
+      padding: 14px 28px;
+      border-radius: 100px;
+      border: 1px solid rgba(194,177,165,0.25);
+      font-size: 15px;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--muted);
+      color: var(--text);
+      transform: translateY(-2px);
+    }
+
+    /* ── COFFEE CUP ILLUSTRATION ── */
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cup-wrap {
+      position: relative;
+    }
+
+    /* Steam lines */
+    .steam {
+      position: absolute;
+      top: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 14px;
+    }
+    .steam-line {
+      width: 3px;
+      height: 50px;
+      border-radius: 3px;
+      background: linear-gradient(to top, rgba(217,161,118,0.6), transparent);
+      transform-origin: bottom center;
+      animation: steam-rise 2.4s ease-in-out infinite;
+    }
+    .steam-line:nth-child(2) { animation-delay: 0.4s; animation-duration: 2.8s; }
+    .steam-line:nth-child(3) { animation-delay: 0.8s; animation-duration: 2.2s; }
+
+    @keyframes steam-rise {
+      0%   { transform: scaleY(0.3) translateY(10px); opacity: 0; }
+      30%  { opacity: 1; }
+      70%  { opacity: 0.6; }
+      100% { transform: scaleY(1.2) translateY(-20px); opacity: 0; }
+    }
+
+    /* Caffeine glow ring */
+    .glow-ring {
+      position: absolute;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 1px solid rgba(217,161,118,0.15);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -45%);
+      animation: ring-pulse 3s ease-in-out infinite;
+    }
+    .glow-ring:nth-child(2) {
+      width: 400px; height: 400px;
+      border-color: rgba(217,161,118,0.07);
+      animation-delay: 1s;
+    }
+    @keyframes ring-pulse {
+      0%, 100% { opacity: 0.4; transform: translate(-50%, -45%) scale(1); }
+      50%       { opacity: 1;   transform: translate(-50%, -45%) scale(1.04); }
+    }
+
+    /* ── STATS STRIP ── */
+    .stats {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(217,161,118,0.1);
+      border-bottom: 1px solid rgba(217,161,118,0.1);
+      background: rgba(43,31,24,0.4);
+      padding: 40px 48px;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+    .stat-item {
+      flex: 1;
+      max-width: 220px;
+      text-align: center;
+      padding: 0 32px;
+      border-right: 1px solid rgba(217,161,118,0.1);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 44px;
+      color: var(--accent);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--faint);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 120px 48px;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 4vw, 54px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    h2 em { font-style: italic; color: var(--accent); }
+
+    .section-lead {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 64px;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .feature-card:first-child { border-radius: 16px 0 0 16px; }
+    .feature-card:last-child  { border-radius: 0 16px 16px 0; }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(217,161,118,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover { background: var(--surface2); }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(217,161,118,0.12);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .feature-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 21px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .feature-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── CAFFEINE CURVE SECTION ── */
+    .curve-section {
+      background: var(--bg2);
+    }
+
+    .curve-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .curve-labels {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .curve-label-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .curve-label-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+    .curve-label-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .curve-label-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Animated graph */
+    .graph-wrap {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid rgba(217,161,118,0.1);
+    }
+    .graph-title {
+      font-size: 13px;
+      color: var(--faint);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      counter-reset: steps;
+    }
+    .step {
+      counter-increment: steps;
+      position: relative;
+      padding-top: 24px;
+    }
+    .step::before {
+      content: counter(steps, decimal-leading-zero);
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: rgba(217,161,118,0.4);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .step-line {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 1px;
+      background: rgba(217,161,118,0.2);
+    }
+    .step-line-fill {
+      height: 1px;
+      background: var(--accent);
+      width: 0;
+      transition: width 1.2s ease;
+    }
+    .step.visible .step-line-fill { width: 100%; }
+
+    .step-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: rgba(217,161,118,0.1);
+      border: 1px solid rgba(217,161,118,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .step h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .step p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── COFFEE TYPES ── */
+    .coffee-types {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 48px;
+    }
+    .coffee-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid rgba(217,161,118,0.12);
+      border-radius: 100px;
+      padding: 10px 20px;
+      transition: background 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+    .coffee-pill:hover {
+      background: var(--surface2);
+      border-color: rgba(217,161,118,0.25);
+    }
+    .coffee-pill-name { font-size: 14px; color: var(--text); }
+    .coffee-pill-mg { font-size: 12px; color: var(--accent); }
+
+    /* ── CTA BLOCK ── */
+    .cta-section {
+      text-align: center;
+      background: var(--bg2);
+    }
+    .cta-section h2 {
+      max-width: 600px;
+      margin: 0 auto 20px;
+    }
+    .cta-section .section-lead {
+      margin: 0 auto 48px;
+      text-align: center;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid rgba(217,161,118,0.2);
+      border-radius: 14px;
+      padding: 14px 24px;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .store-btn:hover {
+      background: var(--surface2);
+      border-color: rgba(217,161,118,0.4);
+      transform: translateY(-2px);
+    }
+    .store-btn-icon { width: 32px; height: 32px; }
+    .store-btn-text { text-align: left; }
+    .store-btn-sub { font-size: 11px; color: var(--faint); display: block; }
+    .store-btn-name { font-size: 15px; color: var(--text); font-weight: 500; display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(217,161,118,0.08);
+      padding: 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .footer-links a {
+      color: var(--faint);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--muted); }
+    .footer-copy {
+      font-size: 13px;
+      color: var(--faint);
+    }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 60px; text-align: center; }
+      .hero-sub { margin: 0 auto 36px; }
+      .hero-actions { justify-content: center; }
+      .stats { padding: 32px 24px; flex-wrap: wrap; gap: 32px; }
+      .stat-item { border-right: none; }
+      section { padding: 80px 24px; }
+      .features-grid { grid-template-columns: 1fr; gap: 2px; }
+      .feature-card:first-child { border-radius: 16px 16px 0 0; }
+      .feature-card:last-child  { border-radius: 0 0 16px 16px; }
+      .curve-layout { grid-template-columns: 1fr; gap: 48px; }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav role="navigation">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A0F0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
+          <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+          <line x1="6" x2="6" y1="2" y2="4"/>
+          <line x1="10" x2="10" y1="2" y2="4"/>
+          <line x1="14" x2="14" y1="2" y2="4"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">The Coffee Break</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How it works</a></li>
+      <li><a href="#science">The science</a></li>
+    </ul>
+    <a href="#download" class="btn-nav">Download free</a>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-tag">Caffeine, finally under control</div>
+        <h1>Drink smarter.<br /><em>Sleep better.</em></h1>
+        <p class="hero-sub">
+          The Coffee Break App schedules your coffee breaks at the scientifically optimal moments — tracking your caffeine curve so every cup fuels you, and none of them steal your sleep.
+        </p>
+        <div class="hero-actions">
+          <a href="#download" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v8"/><path d="m8 12 4 4 4-4"/></svg>
+            Download the app
+          </a>
+          <a href="#how-it-works" class="btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            How it works
+          </a>
+        </div>
+      </div>
+
+      <!-- Cup illustration -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="glow-ring"></div>
+        <div class="glow-ring" style="animation-delay:1s"></div>
+        <div class="cup-wrap" style="animation: float 4s ease-in-out infinite;">
+          <div class="steam">
+            <div class="steam-line"></div>
+            <div class="steam-line"></div>
+            <div class="steam-line"></div>
+          </div>
+          <svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Saucer -->
+            <ellipse cx="110" cy="188" rx="80" ry="14" fill="#2B1F18"/>
+            <ellipse cx="110" cy="185" rx="80" ry="14" fill="#3a2a20"/>
+            <!-- Cup body -->
+            <path d="M55 95 L65 178 Q65 188 80 188 L140 188 Q155 188 155 178 L165 95 Z" fill="#2B1F18"/>
+            <path d="M55 95 L65 178 Q65 188 80 188 L140 188 Q155 188 155 178 L165 95 Z" fill="url(#cupGrad)"/>
+            <!-- Coffee liquid surface -->
+            <ellipse cx="110" cy="95" rx="55" ry="12" fill="#4a3020"/>
+            <ellipse cx="110" cy="93" rx="55" ry="12" fill="#5a3c25"/>
+            <!-- Crema swirl -->
+            <ellipse cx="110" cy="93" rx="40" ry="8" fill="#7a5535" opacity="0.6"/>
+            <path d="M85 93 Q95 87 110 93 Q125 99 135 93" stroke="#c88b4a" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <!-- Cup rim -->
+            <ellipse cx="110" cy="95" rx="55" ry="12" fill="none" stroke="#4a3020" stroke-width="2"/>
+            <!-- Cup highlight -->
+            <path d="M68 110 Q65 140 67 165" stroke="rgba(255,255,255,0.05)" stroke-width="8" stroke-linecap="round"/>
+            <!-- Handle -->
+            <path d="M165 115 Q195 115 195 140 Q195 165 165 165" stroke="#3a2a20" stroke-width="12" fill="none" stroke-linecap="round"/>
+            <path d="M165 115 Q190 115 190 140 Q190 160 165 160" stroke="#4a3020" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <!-- Caffeine meter bar on cup -->
+            <rect x="78" y="128" width="64" height="6" rx="3" fill="rgba(0,0,0,0.3)"/>
+            <rect x="78" y="128" width="48" height="6" rx="3" fill="url(#meterGrad)"/>
+            <!-- Small clock icon suggestion -->
+            <circle cx="110" cy="152" r="10" fill="rgba(217,161,118,0.15)" stroke="rgba(217,161,118,0.3)" stroke-width="1"/>
+            <line x1="110" y1="145" x2="110" y2="152" stroke="#d9a176" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="110" y1="152" x2="115" y2="152" stroke="#d9a176" stroke-width="1.5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="cupGrad" x1="55" y1="95" x2="165" y2="188" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4a3020" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#4a3020" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="meterGrad" x1="78" y1="0" x2="142" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#57a373"/>
+                <stop offset="60%" stop-color="#d9a176"/>
+                <stop offset="100%" stop-color="#e07070"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <div class="stats" role="region" aria-label="Key numbers">
+    <div class="stat-item reveal">
+      <div class="stat-num">5h</div>
+      <div class="stat-label">Caffeine half-life</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-1">
+      <div class="stat-num">220<span style="font-size:22px">mg</span></div>
+      <div class="stat-label">Peak focus threshold</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-2">
+      <div class="stat-num">20<span style="font-size:22px">mg</span></div>
+      <div class="stat-label">Sleep-safe zone</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-3">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Coffee types tracked</div>
+    </div>
+  </div>
+
+  <!-- ── FEATURES ── -->
+  <section id="features" aria-labelledby="features-heading">
+    <div class="section-inner">
+      <p class="section-eyebrow reveal">What it does</p>
+      <h2 id="features-heading" class="reveal reveal-delay-1">Everything your caffeine<br /><em>needs to thrive</em></h2>
+      <p class="section-lead reveal reveal-delay-2">A precision tool for coffee lovers who want to feel great all day — and actually sleep at night.</p>
+
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="feature-title">Live caffeine curve</div>
+          <p class="feature-desc">Watch your caffeine level tick down in real time. A dynamic graph shows exactly where you are on your metabolism curve — focus zone, plateau, and sleep-safe window.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="feature-title">Smart break scheduling</div>
+          <p class="feature-desc">Set your active days, preferred break times, and coffee habit. The app auto-schedules your next cup and sends a notification when it's the perfect time to brew.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="feature-title">Guided break timer</div>
+          <p class="feature-desc">When it's time, a focused break screen counts down your brew. Ambient sounds mark the start and end, keeping you present and refreshed before heading back.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+            </svg>
+          </div>
+          <div class="feature-title">Coffee type profiles</div>
+          <p class="feature-desc">Espresso, brewed, cold brew, or decaf — each type has a scientifically accurate caffeine profile. The app calculates your curve based on what you actually drink.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-4">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#57a373" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="feature-title">Jitter & sleep alerts</div>
+          <p class="feature-desc">The app warns you when you're approaching jitter territory and shows your projected sleep clearance time — so you always know if that late afternoon cup is worth it.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-5">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>
+            </svg>
+          </div>
+          <div class="feature-title">Fully configurable schedule</div>
+          <p class="feature-desc">Choose your active weekdays, coffees per day, break duration, and how far ahead you want your reminder. Your coffee habit, your rules.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CAFFEINE CURVE SCIENCE ── -->
+  <section id="science" class="curve-section" aria-labelledby="science-heading">
+    <div class="section-inner">
+      <div class="curve-layout">
+        <div>
+          <p class="section-eyebrow reveal">The science</p>
+          <h2 id="science-heading" class="reveal reveal-delay-1">Your caffeine isn't<br /><em>a mystery anymore</em></h2>
+          <p class="section-lead reveal reveal-delay-2" style="margin-bottom:0">Using the standard pharmacokinetic model, the app simulates caffeine decay in your bloodstream — updated live, every second.</p>
+
+          <div class="curve-labels reveal reveal-delay-3">
+            <div class="curve-label-item">
+              <div class="curve-label-dot" style="background:#57a373"></div>
+              <div>
+                <div class="curve-label-title">Focus zone (&gt;220 mg)</div>
+                <div class="curve-label-desc">Where your alertness and cognition peak. The app helps you schedule breaks so you stay here when you need it most.</div>
+              </div>
+            </div>
+            <div class="curve-label-item">
+              <div class="curve-label-dot" style="background:#d9a176"></div>
+              <div>
+                <div class="curve-label-title">Winding down (20–220 mg)</div>
+                <div class="curve-label-desc">Caffeine is still present but declining. A good time to consider your next cup or let it fade naturally toward sleep.</div>
+              </div>
+            </div>
+            <div class="curve-label-item">
+              <div class="curve-label-dot" style="background:#7a6a9a"></div>
+              <div>
+                <div class="curve-label-title">Sleep-safe (&lt;20 mg)</div>
+                <div class="curve-label-desc">Caffeine has metabolized enough that sleep quality won't be disrupted. The app shows you exactly when you'll reach this point.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-2">
+          <div class="graph-wrap">
+            <div class="graph-title">Caffeine level over time</div>
+            <svg id="caffeine-graph" viewBox="0 0 320 180" width="100%" preserveAspectRatio="xMidYMid meet">
+              <!-- Grid lines -->
+              <line x1="0" y1="135" x2="320" y2="135" stroke="rgba(217,161,118,0.08)" stroke-width="1"/>
+              <line x1="0" y1="90" x2="320" y2="90" stroke="rgba(217,161,118,0.08)" stroke-width="1"/>
+              <line x1="0" y1="45" x2="320" y2="45" stroke="rgba(217,161,118,0.08)" stroke-width="1"/>
+
+              <!-- Focus zone band -->
+              <rect x="0" y="0" width="320" height="55" fill="rgba(87,163,115,0.06)" />
+              <text x="8" y="38" font-size="9" fill="#57a373" opacity="0.7" font-family="'DM Sans',sans-serif">Focus zone</text>
+
+              <!-- Sleep threshold line -->
+              <line x1="0" y1="148" x2="320" y2="148" stroke="rgba(122,106,154,0.4)" stroke-width="1" stroke-dasharray="4 3"/>
+              <text x="8" y="146" font-size="9" fill="rgba(122,106,154,0.8)" font-family="'DM Sans',sans-serif">Sleep-safe</text>
+
+              <!-- Caffeine curve (animated path) -->
+              <path id="curve-path"
+                d="M10,150 C30,148 45,100 65,20 C70,5 80,5 90,8 C120,18 140,50 170,85 C200,118 230,138 280,148"
+                stroke="url(#curveGrad)" stroke-width="2.5" fill="none"
+                stroke-linecap="round"
+                stroke-dasharray="500"
+                stroke-dashoffset="500">
+                <animate attributeName="stroke-dashoffset" from="500" to="0" dur="2s" begin="0.5s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+              </path>
+
+              <!-- Area fill under curve -->
+              <path
+                d="M10,150 C30,148 45,100 65,20 C70,5 80,5 90,8 C120,18 140,50 170,85 C200,118 230,138 280,148 L280,168 L10,168 Z"
+                fill="url(#areaGrad)" opacity="0">
+                <animate attributeName="opacity" from="0" to="1" dur="1s" begin="1.5s" fill="freeze"/>
+              </path>
+
+              <!-- Dose markers (when coffee was drunk) -->
+              <circle cx="10" cy="150" r="4" fill="#d9a176" opacity="0">
+                <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.5s" fill="freeze"/>
+              </circle>
+              <circle cx="90" cy="8" r="4" fill="#d9a176" opacity="0">
+                <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.2s" fill="freeze"/>
+              </circle>
+              <line x1="90" y1="8" x2="90" y2="168" stroke="rgba(217,161,118,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+
+              <!-- X-axis labels -->
+              <text x="8"   y="175" font-size="9" fill="#6c5d52" font-family="'DM Sans',sans-serif">6am</text>
+              <text x="78"  y="175" font-size="9" fill="#6c5d52" font-family="'DM Sans',sans-serif">9am</text>
+              <text x="148" y="175" font-size="9" fill="#6c5d52" font-family="'DM Sans',sans-serif">12pm</text>
+              <text x="218" y="175" font-size="9" fill="#6c5d52" font-family="'DM Sans',sans-serif">3pm</text>
+              <text x="268" y="175" font-size="9" fill="#6c5d52" font-family="'DM Sans',sans-serif">6pm</text>
+
+              <defs>
+                <linearGradient id="curveGrad" x1="0" y1="0" x2="320" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%"   stop-color="#57a373"/>
+                  <stop offset="40%"  stop-color="#d9a176"/>
+                  <stop offset="100%" stop-color="#7a6a9a"/>
+                </linearGradient>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="168" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%"   stop-color="#d9a176" stop-opacity="0.15"/>
+                  <stop offset="100%" stop-color="#d9a176" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <!-- Coffee type badges -->
+            <div class="coffee-types" style="margin-top:20px">
+              <div class="coffee-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2.2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+                <span class="coffee-pill-name">Espresso</span>
+                <span class="coffee-pill-mg">~63 mg</span>
+              </div>
+              <div class="coffee-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2.2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+                <span class="coffee-pill-name">Brewed</span>
+                <span class="coffee-pill-mg">~95 mg</span>
+              </div>
+              <div class="coffee-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2.2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+                <span class="coffee-pill-name">Cold Brew</span>
+                <span class="coffee-pill-mg">~175 mg</span>
+              </div>
+              <div class="coffee-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6c5d52" stroke-width="2.2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+                <span class="coffee-pill-name" style="color:var(--faint)">Decaf</span>
+                <span class="coffee-pill-mg" style="color:var(--faint)">~3 mg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section id="how-it-works" aria-labelledby="hiw-heading">
+    <div class="section-inner">
+      <p class="section-eyebrow reveal">Simple by design</p>
+      <h2 id="hiw-heading" class="reveal reveal-delay-1">Three steps to a<br /><em>better coffee day</em></h2>
+      <p class="section-lead reveal reveal-delay-2">Set up once, run on autopilot. The app does the thinking so you can focus on your work.</p>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-line"><div class="step-line-fill"></div></div>
+          <div class="step-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>Tell it your habits</h3>
+          <p>Choose your active weekdays, how many coffees you drink per day, your preferred coffee type, and what time you usually start and end your day. Takes about 60 seconds.</p>
+        </div>
+        <div class="step reveal reveal-delay-1">
+          <div class="step-line"><div class="step-line-fill"></div></div>
+          <div class="step-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d9a176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <h3>Get notified at the right time</h3>
+          <p>The app calculates your optimal break windows based on real caffeine half-life science and fires a notification when it's time — not too early, not too late.</p>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-line"><div class="step-line-fill"></div></div>
+          <div class="step-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#57a373" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h3>Enjoy the break</h3>
+          <p>Open the app, tap Start Break, and a calming timer takes over. When it ends, a gentle bell sound signals you're ready to go — fuelled, focused, and on schedule.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DOWNLOAD CTA ── -->
+  <section id="download" class="cta-section" aria-labelledby="cta-heading">
+    <div class="section-inner" style="text-align:center">
+      <p class="section-eyebrow reveal">Download today</p>
+      <h2 id="cta-heading" class="reveal reveal-delay-1">Your best coffee day<br /><em>starts right now</em></h2>
+      <p class="section-lead reveal reveal-delay-2">Free to download. Available for iPhone and Android. Set up takes under a minute.</p>
+
+      <div class="cta-buttons reveal reveal-delay-3">
+        <a href="#" class="store-btn">
+          <svg class="store-btn-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="#2B1F18"/>
+            <path d="M21.5 16.9c0-2.7 2.2-4 2.3-4.1-1.3-1.9-3.2-2.1-3.9-2.2-1.7-.2-3.2 1-4 1s-2.1-1-3.5-1c-1.8 0-3.5 1-4.4 2.6-1.9 3.2-.5 8 1.3 10.6.9 1.3 1.9 2.7 3.3 2.6 1.3-.1 1.8-.8 3.4-.8s2 .8 3.4.8 2.3-1.3 3.2-2.5c1-1.4 1.4-2.8 1.5-2.9-.1-.1-2.6-1-2.6-3.1zM18.8 9c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3 1.6-.7.7-1.3 1.9-1.1 3.1 1.1.1 2.2-.5 3-1.4z" fill="#d9a176"/>
+          </svg>
+          <div class="store-btn-text">
+            <span class="store-btn-sub">Download on the</span>
+            <span class="store-btn-name">App Store</span>
+          </div>
+        </a>
+        <a href="#" class="store-btn">
+          <svg class="store-btn-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="#2B1F18"/>
+            <path d="M7 8.5L17.5 19 7 29.5V8.5z" fill="#d9a176" opacity="0.4"/>
+            <path d="M7 8.5l13 6.5-3.5 3.5L7 8.5z" fill="#57a373"/>
+            <path d="M25 19l-4.5 2.5L17 19l3.5-3.5L25 19z" fill="#d9a176"/>
+            <path d="M7 29.5l13-6.5-3.5-3.5L7 29.5z" fill="#e07070"/>
+          </svg>
+          <div class="store-btn-text">
+            <span class="store-btn-sub">Get it on</span>
+            <span class="store-btn-name">Google Play</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Subtle promise line -->
+      <p class="reveal reveal-delay-4" style="margin-top:32px; font-size:13px; color:var(--faint)">
+        No account required &middot; No ads &middot; Works offline
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <a href="#" class="nav-logo" style="text-decoration:none">
+      <div class="nav-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A0F0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
+          <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+          <line x1="6" x2="6" y1="2" y2="4"/>
+          <line x1="10" x2="10" y1="2" y2="4"/>
+          <line x1="14" x2="14" y1="2" y2="4"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">The Coffee Break App</span>
+    </a>
+    <ul class="footer-links">
+      <li><a href="../the-coffee-break-app/src/app/privacy.tsx">Privacy Policy</a></li>
+      <li><a href="../the-coffee-break-app/src/app/terms.tsx">Terms of Use</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 The Coffee Break App. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ── SCROLL REVEAL ──
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // For step lines
+          const line = entry.target.querySelector('.step-line-fill');
+          if (line) {
+            setTimeout(() => entry.target.classList.add('visible'), 100);
+          }
+        }
+      });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Mark the hero content visible immediately
+    document.querySelectorAll('.hero .reveal, .hero-content > *').forEach(el => {
+      el.classList.add('visible');
+    });
+
+    // ── NAV TINT ON SCROLL ──
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        nav.style.background = 'rgba(22,12,7,0.92)';
+      } else {
+        nav.style.background = 'rgba(22,12,7,0.7)';
+      }
+    }, { passive: true });
+
+    // ── HERO STATS COUNTER ANIMATION ──
+    function animateCounter(el, target, suffix, duration) {
+      let start = 0;
+      const step = target / (duration / 16);
+      function update() {
+        start = Math.min(start + step, target);
+        const display = Number.isInteger(target) ? Math.floor(start) : start.toFixed(0);
+        el.innerHTML = display + (suffix || '');
+        if (start < target) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Trigger counter when stats come into view
+    const statNums = document.querySelectorAll('.stat-num');
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const text = el.textContent;
+          statsObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    statNums.forEach(el => statsObserver.observe(el));
+
+    // ── SMOOTH ACTIVE NAV LINKS ──
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.style.color = link.getAttribute('href') === '#' + entry.target.id
+              ? 'var(--text)' : '';
+          });
+        }
+      });
+    }, { threshold: 0.4 });
+    sections.forEach(s => sectionObserver.observe(s));
+  </script>
+</body>
+</html>
