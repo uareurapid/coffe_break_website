@@ -1,0 +1,80 @@
+# The Coffee Break App — Full Reference
+
+> Caffeine tracker and smart break scheduler. Drink smarter, sleep better — using real pharmacokinetic science.
+
+The Coffee Break App is a mobile app for iOS and Android that tracks caffeine intake in real time and auto-schedules coffee breaks at scientifically optimal moments. It uses the standard pharmacokinetic model (5-hour half-life) to simulate caffeine decay in your bloodstream — updated live, every second — and helps you stay in the focus zone without disrupting sleep.
+
+**Website:** https://pcristo.dev/coffe_break_website/
+
+---
+
+## How It Works
+
+### 1. Tell it your habits
+Set your active weekdays, how many coffees you drink per day, your preferred coffee type, and your start/end times. Takes about 60 seconds.
+
+### 2. Get notified at the right time
+The app calculates optimal break windows based on real caffeine half-life science and sends a notification when it's time — not too early, not too late.
+
+### 3. Enjoy the break
+Open the app, tap Start Break, and a calming timer takes over. A gentle bell sound marks the start and end so you return to work fuelled, focused, and on schedule.
+
+---
+
+## Features
+
+### Live Caffeine Curve
+A dynamic real-time graph shows your current caffeine level, ticking down second by second. Clearly marks the focus zone, plateau, and sleep-safe window.
+
+### Smart Break Scheduling
+Auto-schedules your next cup based on your current caffeine curve and the time you need to reach the focus zone. Sends a push notification at the perfect moment.
+
+### Guided Break Timer
+A focused break screen with ambient sounds (start and end) counts down your brew time. Keeps you present and refreshed before heading back to work.
+
+### Coffee Type Profiles
+Each type has a scientifically accurate caffeine profile:
+- Espresso: ~63 mg
+- Brewed coffee: ~95 mg
+- Cold brew: ~175 mg
+- Decaf: ~3 mg
+
+### Jitter & Sleep Alerts
+- Warns when you're approaching jitter territory (too much caffeine)
+- Shows projected sleep clearance time — know before you drink if the afternoon cup is worth it
+
+### Fully Configurable Schedule
+- Choose active weekdays
+- Set coffees per day and preferred type
+- Set break duration
+- Set reminder lead time
+
+---
+
+## The Science
+
+Caffeine follows a pharmacokinetic decay curve with approximately a 5-hour half-life. The app models this continuously:
+
+| Zone | Caffeine Level | Description |
+|------|---------------|-------------|
+| Focus zone | >220 mg | Peak alertness and cognition |
+| Winding down | 20–220 mg | Declining — consider next cup or let it fade |
+| Sleep-safe | <20 mg | Safe to sleep without disruption |
+
+---
+
+## Availability
+
+- iOS (App Store) — Free
+- Android (Google Play) — Free
+- No account required · No ads · Works fully offline
+
+---
+
+## Links
+
+- Home: https://pcristo.dev/coffe_break_website/
+- Privacy Policy: https://pcristo.dev/coffe_break_website/privacy.html
+- Terms of Use: https://pcristo.dev/coffe_break_website/terms.html
+
+© 2026 The Coffee Break App. All rights reserved.

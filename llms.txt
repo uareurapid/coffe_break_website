@@ -1,0 +1,33 @@
+# The Coffee Break App
+
+> Caffeine tracker and smart break scheduler. Drink smarter, sleep better — using real pharmacokinetic science.
+
+The Coffee Break App tracks your caffeine intake in real time and schedules your coffee breaks at scientifically optimal moments. It models caffeine decay in your bloodstream so every cup fuels you and none of them steal your sleep.
+
+## Key Pages
+
+- [Home](https://pcristo.dev/coffe_break_website/): Features, how it works, download
+- [Privacy Policy](https://pcristo.dev/coffe_break_website/privacy.html)
+- [Terms of Use](https://pcristo.dev/coffe_break_website/terms.html)
+
+## Features
+
+- **Live Caffeine Curve** — Real-time graph showing your current caffeine level, focus zone, plateau, and sleep-safe window
+- **Smart Break Scheduling** — Auto-schedules optimal coffee breaks based on your habit and sends notifications at the right time
+- **Guided Break Timer** — Focused countdown screen with ambient sounds marking start and end
+- **Coffee Type Profiles** — Espresso (~63 mg), Brewed (~95 mg), Cold Brew (~175 mg), Decaf (~3 mg) — each with accurate caffeine profiles
+- **Jitter & Sleep Alerts** — Warns when approaching jitter territory; shows projected sleep clearance time
+- **Fully Configurable Schedule** — Set active weekdays, coffees per day, break duration, and reminder lead time
+
+## Science
+
+Uses the standard pharmacokinetic model with a ~5 hour caffeine half-life:
+- **Focus zone** (>220 mg): Peak alertness and cognition
+- **Winding down** (20–220 mg): Caffeine present but declining
+- **Sleep-safe** (<20 mg): Safe to sleep without disruption
+
+## Availability
+
+- iOS (App Store)
+- Android (Google Play)
+- Free · No account required · No ads · Works offline
